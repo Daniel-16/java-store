@@ -33,7 +33,7 @@ cd java-store
 3. Build the Project:
 Use Maven to build the project:
 ```
-    mvn clean install
+mvn clean install
 ```
 4. Run the Application:
 Start the Spring Boot application:
