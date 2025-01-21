@@ -1,144 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Java Store</title>
-    <link href="../dist/styles.css" rel="stylesheet" />
-  </head>
-  <body>
-    <header class="bg-blue-600 text-white p-6">
-      <h1 class="text-4xl font-bold">Welcome to Our Java Store</h1>
-      <p class="mt-2">Your one-stop shop for all things Java!</p>
-    </header>
-    <main class="container mx-auto my-8">
-      <section class="bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-3xl font-semibold">Featured Products</h2>
-        <div class="mt-6">
-          <form
-            method="POST"
-            class="space-y-4"
-            enctype="multipart/form-data"
-            th:object="${productDto}"
-            action="/products/create"
-          >
-            <!-- Name Field -->
-            <div>
-              <label for="name" class="block font-medium text-gray-700"
-                >ID</label
-              >
-              <input
-                type="text"
-                class="block w-full rounded-lg border shadow-sm py-2 px-4 outline-none text-center"
-                placeholder="Name of item"
-                required
-                th:value="${product.id}"
-                readonly
-              />
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Java Store</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-gray-50">
+        <!-- Header with responsive padding and gradient background -->
+        <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">Welcome to Our Gadget Store</h1>
+                <p class="mt-2 text-blue-100 text-lg">Your one-stop shop for all things gadgets!</p>
             </div>
+        </header>
 
-            <!-- Brand Field -->
-            <div class="mt-2">
-              <label for="brand" class="block font-medium text-gray-700"
-                >Brand</label
-              >
-              <input
-                type="text"
-                class="block w-full rounded-lg border shadow-sm py-2 px-4 outline-none text-center"
-                placeholder="Brand name"
-                required
-                th:value="${product.brand}"
-              />
-            </div>
+        <!-- Main content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="p-6 md:p-8">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Product Details</h2>
+                    
+                    <form 
+                        method="POST" 
+                        enctype="multipart/form-data" 
+                        class="space-y-6"
+                        th:object="${productDto}"
+                        th:action="@{/products/edit(id=${product.id})}"
+                    >
+                        <input type="hidden" name="id" th:value="${product.id}" />
+                        
+                        <!-- Grid layout for form fields -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Name Field -->
+                            <div class="space-y-2">
+                                <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
+                                <input
+                                    type="text"
+                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition duration-150 p-2.5 border"
+                                    placeholder="Enter product name"
+                                    required
+                                    th:field="${productDto.name}"
+                                />
+                            </div>
 
-            <!-- Price Field -->
-            <div class="mt-2">
-              <label for="price" class="block font-medium text-gray-700"
-                >Price</label
-              >
-              <input
-                type="number"
-                class="block w-full rounded-lg border shadow-sm py-2 px-4 outline-none text-center"
-                placeholder="Price"
-                required
-                th:value="${product.price}"
-              />
-            </div>
+                            <!-- Brand Field -->
+                            <div class="space-y-2">
+                                <label for="brand" class="block text-sm font-medium text-gray-700">Brand</label>
+                                <input
+                                    type="text"
+                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition duration-150 p-2.5 border"
+                                    placeholder="Enter brand name"
+                                    required
+                                    th:field="${productDto.brand}"
+                                />
+                            </div>
 
-            <div class="mt-2">
-              <label for="category" class="block font-medium text-gray-700"
-                >Category</label
-              >
-              <select
-                th:value="${product.category}"
-                class="block w-full rounded-lg border shadow-sm py-2 px-4 outline-none"
-              >
-                <option value="">Select a category</option>
-                <option value="Computers">Computers</option>
-                <option value="Phone">Phone</option>
-                <option value="Tablet">Tablet</option>
-                <option value="Laptops">Laptops</option>
-              </select>
-            </div>
+                            <!-- Price Field -->
+                            <div class="space-y-2">
+                                <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                                    <input
+                                        type="number"
+                                        class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition duration-150 pl-8 p-2.5 border"
+                                        placeholder="0.00"
+                                        step="0.01"
+                                        required
+                                        th:field="${productDto.price}"
+                                    />
+                                </div>
+                            </div>
 
-            <div class="mt-2">
-              <label for="Description" class="block font-medium text-gray-700"
-                >Description</label
-              >
-              <input
-                type="text"
-                class="block w-full rounded-lg border shadow-sm py-1 px-4 outline-none text-center"
-                placeholder="Description"
-                required
-                th:value="${product.brand}"
-              />
-            </div>
+                            <!-- Category Field -->
+                            <div class="space-y-2">
+                                <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+                                <select
+                                    class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition duration-150 p-2.5 border"
+                                    required
+                                    th:field="${productDto.category}"
+                                >
+                                    <option value="">Select a category</option>
+                                    <option value="Computers">Computers</option>
+                                    <option value="Phone">Phone</option>
+                                    <option value="Tablet">Tablet</option>
+                                    <option value="Laptops">Laptops</option>
+                                </select>
+                            </div>
+                        </div>
 
-            <div class="mt-2">
-              <label for="image" class="block font-medium text-gray-700"
-                >Image</label
-              >
-              <img
-                th:src="@{'/images/'+ ${product.imageFileName}}"
-                type="file"
-                class="block w-full rounded-lg border shadow-sm py-2 px-4 outline-none text-center"
-                required
-              />
-            </div>
+                        <!-- Description Field -->
+                        <div class="space-y-2">
+                            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                            <textarea
+                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition duration-150 p-2.5 border"
+                                placeholder="Enter product description"
+                                required
+                                th:field="${productDto.description}"
+                                rows="4"
+                            ></textarea>
+                        </div>
 
-            <!-- Image Field -->
-            <div class="mt-2">
-              <label for="image" class="block font-medium text-gray-700"
-                >Image</label
-              >
-              <input
-                type="file"
-                class="block w-full rounded-lg border shadow-sm py-2 px-4 outline-none text-center"
-                required
-              />
-            </div>
+                        <!-- Image Upload Field -->
+                        <div class="space-y-2">
+                            <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
+                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-blue-500 transition-colors duration-150">
+                                <div class="space-y-1 text-center">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <div class="flex text-sm text-gray-600">
+                                        <label class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500">
+                                            <span>Upload a file</span>
+                                            <input type="file" class="sr-only" th:field="*{imageFile}" accept="image/*">
+                                        </label>
+                                    </div>
+                                    <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                                </div>
+                            </div>
+                        </div>
 
-            <div class="flex gap-4">
-              <button
-                type="submit"
-                class="mt-4 p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              >
-                Submit
-              </button>
-              <a
-                href="/products"
-                class="mt-4 p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                role="button"
-              >
-                Cancel
-              </a>
+                        <!-- Validation errors -->
+                        <div th:if="${#fields.hasErrors('*')}" class="text-red-500">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('*')}" th:text="${err}" />
+                            </ul>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                            <button
+                                type="submit"
+                                class="inline-flex justify-center items-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150"
+                            >
+                                Save Product
+                            </button>
+                            <a
+                                href="/products"
+                                class="inline-flex justify-center items-center px-6 py-3 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150"
+                            >
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-          </form>
-        </div>
-      </section>
-    </main>
-    <footer class="bg-gray-800 text-white text-center p-4">
-      <p>&copy; 2023 Java Store. All rights reserved.</p>
-    </footer>
-  </body>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 mt-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <p class="text-center text-gray-400 text-sm">
+                    &copy; 2024 Java Store. All rights reserved.
+                </p>
+            </div>
+        </footer>
+    </body>
 </html>

@@ -90,34 +90,42 @@ public class ProductController {
     public String showEditPage(Model model, @RequestParam int id) {
         try {
             Products product = repo.findById(id).get();
-            model.addAttribute("product", product);
-
+            
             ProductDto productDto = new ProductDto();
             productDto.setName(product.getName());
             productDto.setBrand(product.getBrand());
             productDto.setCategory(product.getCategory());
             productDto.setPrice(product.getPrice());
             productDto.setDescription(product.getDescription());
+            
+            // Add both product and productDto to model
+            model.addAttribute("product", product);
+            model.addAttribute("productDto", productDto);
+            
+            return "products/editProduct";
         } catch (Exception e) {
             System.out.println("Exception caught: " + e.getMessage());
             return "redirect:/products";
         }
-
-        return "products/editProduct";
     }
 
     @PostMapping("/edit")
-    public String updateProduct(Model model, @RequestParam int id, @Valid @ModelAttribute ProductDto productDto, BindingResult result) {
-        try {
+    public String updateProduct(
+        @RequestParam int id, 
+        @Valid @ModelAttribute ProductDto productDto,
+        BindingResult result,
+        Model model
+    ) {
+        if (result.hasErrors()) {
             Products product = repo.findById(id).get();
             model.addAttribute("product", product);
-
-            if (result.hasErrors()) {
-                return "products/editProduct";
-            }
-
+            return "products/editProduct";
+        }
+        
+        try {
+            Products product = repo.findById(id).get();
             if (!productDto.getImageFile().isEmpty()) {
-                String uploadDir = "public/image";
+                String uploadDir = "public/images/";
                 Path oldImagePath = Paths.get(uploadDir + product.getImageFileName());
 
                 try {
@@ -134,11 +142,42 @@ public class ProductController {
                 try(InputStream inputStream = image.getInputStream()) {
                     Files.copy(inputStream, Paths.get(uploadDir + imageName), StandardCopyOption.REPLACE_EXISTING);
                 }
+                product.setImageFileName(imageName);
             }
+            
+            product.setName(productDto.getName());
+            product.setBrand(productDto.getBrand());
+            product.setCategory(productDto.getCategory());
+            product.setPrice(productDto.getPrice());
+            product.setDescription(productDto.getDescription());
+
+            repo.save(product);
+
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println("Exception caught: " + e);
         }
 
+        return "redirect:/products";
+    }
+
+    @GetMapping("/delete")
+    public String deleteProduct(@RequestParam int id) {
+        try {
+            Products product = repo.findById(id).get();
+            String uploadDir = "public/images/";
+            Path imagePath = Paths.get(uploadDir + product.getImageFileName());
+            
+            try {
+                Files.delete(imagePath);
+            } catch (Exception e) {
+                System.out.println("Exception deleting image: " + e.getMessage());
+            }
+            
+            repo.deleteById(id);
+        } catch (Exception e) {
+            System.out.println("Exception caught: " + e.getMessage());
+        }
+        
         return "redirect:/products";
     }
 
