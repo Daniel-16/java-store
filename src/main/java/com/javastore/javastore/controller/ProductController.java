@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.javastore.javastore.models.ProductDto;
@@ -68,13 +69,14 @@ public class ProductController {
                 Files.copy(inputStream, Paths.get(uploadDir + fileName), StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Exception caught: " + e);
         }
 
         Products product = new Products();
         product.setName(productDto.getName());
         product.setBrand(productDto.getBrand());
         product.setCategory(productDto.getCategory());
+        product.setPrice(productDto.getPrice());
         product.setDescription(productDto.getDescription());
         product.setCreatedAt(createdAt);
         product.setImageFileName(fileName);
@@ -84,8 +86,60 @@ public class ProductController {
         return "redirect:/products";
     }
 
-    public void setRepo(ProductRepository repo) {
-        this.repo = repo;
+    @GetMapping("/edit")
+    public String showEditPage(Model model, @RequestParam int id) {
+        try {
+            Products product = repo.findById(id).get();
+            model.addAttribute("product", product);
+
+            ProductDto productDto = new ProductDto();
+            productDto.setName(product.getName());
+            productDto.setBrand(product.getBrand());
+            productDto.setCategory(product.getCategory());
+            productDto.setPrice(product.getPrice());
+            productDto.setDescription(product.getDescription());
+        } catch (Exception e) {
+            System.out.println("Exception caught: " + e.getMessage());
+            return "redirect:/products";
+        }
+
+        return "products/editProduct";
+    }
+
+    @PostMapping("/edit")
+    public String updateProduct(Model model, @RequestParam int id, @Valid @ModelAttribute ProductDto productDto, BindingResult result) {
+        try {
+            Products product = repo.findById(id).get();
+            model.addAttribute("product", product);
+
+            if (result.hasErrors()) {
+                return "products/editProduct";
+            }
+
+            if (!productDto.getImageFile().isEmpty()) {
+                String uploadDir = "public/image";
+                Path oldImagePath = Paths.get(uploadDir + product.getImageFileName());
+
+                try {
+                    Files.delete(oldImagePath);
+                } catch (Exception e) {
+                    System.out.println("Exception caught: " + e.getMessage());
+                }
+
+                // Save the new file
+                MultipartFile image = productDto.getImageFile();
+                Date createdAt = new Date();
+                String imageName = createdAt.getTime() + "_" + image.getOriginalFilename();
+
+                try(InputStream inputStream = image.getInputStream()) {
+                    Files.copy(inputStream, Paths.get(uploadDir + imageName), StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
+        return "redirect:/products";
     }
 
 }

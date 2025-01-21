@@ -25,14 +25,15 @@
             <!-- Name Field -->
             <div>
               <label for="name" class="block font-medium text-gray-700"
-                >Name</label
+                >ID</label
               >
               <input
                 type="text"
                 class="block w-full rounded-lg border shadow-sm py-2 px-4 outline-none text-center"
                 placeholder="Name of item"
                 required
-                th:field="${productDto.name}"
+                th:value="${product.id}"
+                readonly
               />
             </div>
 
@@ -46,7 +47,7 @@
                 class="block w-full rounded-lg border shadow-sm py-2 px-4 outline-none text-center"
                 placeholder="Brand name"
                 required
-                th:field="${productDto.brand}"
+                th:value="${product.brand}"
               />
             </div>
 
@@ -60,13 +61,18 @@
                 class="block w-full rounded-lg border shadow-sm py-2 px-4 outline-none text-center"
                 placeholder="Price"
                 required
-                th:field="${productDto.price}"
+                th:value="${product.price}"
               />
             </div>
 
             <div class="mt-2">
-              <label for="category" class="block font-medium text-gray-700">Category</label>
-              <select th:field="${productDto.category}" class="block w-full rounded-lg border shadow-sm py-2 px-4 outline-none">
+              <label for="category" class="block font-medium text-gray-700"
+                >Category</label
+              >
+              <select
+                th:value="${product.category}"
+                class="block w-full rounded-lg border shadow-sm py-2 px-4 outline-none"
+              >
                 <option value="">Select a category</option>
                 <option value="Computers">Computers</option>
                 <option value="Phone">Phone</option>
@@ -84,7 +90,19 @@
                 class="block w-full rounded-lg border shadow-sm py-1 px-4 outline-none text-center"
                 placeholder="Description"
                 required
-                th:field="${productDto.description}"
+                th:value="${product.brand}"
+              />
+            </div>
+
+            <div class="mt-2">
+              <label for="image" class="block font-medium text-gray-700"
+                >Image</label
+              >
+              <img
+                th:src="@{'/images/'+ ${product.imageFileName}}"
+                type="file"
+                class="block w-full rounded-lg border shadow-sm py-2 px-4 outline-none text-center"
+                required
               />
             </div>
 
@@ -97,18 +115,21 @@
                 type="file"
                 class="block w-full rounded-lg border shadow-sm py-2 px-4 outline-none text-center"
                 required
-                th:field="${productDto.imageFile}"
               />
             </div>
 
             <div class="flex gap-4">
               <button
-              type="submit"
-              class="mt-4 p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                type="submit"
+                class="mt-4 p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               >
-              Submit
+                Submit
               </button>
-              <a href="/products" class="mt-4 p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700" role="button">
+              <a
+                href="/products"
+                class="mt-4 p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                role="button"
+              >
                 Cancel
               </a>
             </div>
