@@ -36,7 +36,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${product.category}"></td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${product.price}"></td>
                             <td>
-                                <img th:src="@('/images/'+${product.imageFileName})" alt="Product Image" class="h-16 w-16 object-cover" width="64" height="64">
+                                <img th:src="@{'/images/'+ ${product.imageFileName}}" alt="Product Image" class="h-20 w-20 object-cover" width="80" height="80">
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${product.createdAt.toString().substring(0, 10)}"></td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">

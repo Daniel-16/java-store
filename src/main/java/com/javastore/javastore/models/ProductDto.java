@@ -17,6 +17,7 @@ public class ProductDto {
     private String category;
 
     @Min(0)
+    private double price;
 
     @Size(min = 10, message = "Description should be minimum 10 characters")
     @Size(max = 2000, message = "Description should be maximum 2000 characters")
@@ -64,5 +65,13 @@ public class ProductDto {
         this.imageFile = imageFile;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+    
     
 }
